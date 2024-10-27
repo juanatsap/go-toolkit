@@ -16,7 +16,7 @@ The included tools are:
 
 ## Version
 
-Current tagged version: **v1.0.0**
+Current tagged version: **1.0.0**
 
 > This project follows [Semantic Versioning](https://semver.org/).
 
