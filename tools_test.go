@@ -12,15 +12,6 @@ import (
 	"testing"
 )
 
-func TestTools_RandomString(t *testing.T) {
-	var tools Tools
-	const length = 10
-	randomString := tools.RandomString(length)
-	if len(randomString) != length {
-		t.Errorf("Expected %d, got %d", length, len(randomString))
-	}
-}
-
 var uploadTests = []struct {
 	name          string
 	allowedTypes  []string
@@ -33,6 +24,14 @@ var uploadTests = []struct {
 	{name: "not allowed rename", allowedTypes: []string{"image/jpeg"}, rename: true, errorExpected: true},
 }
 
+func TestTools_RandomString(t *testing.T) {
+	var tools Tools
+	const length = 10
+	randomString := tools.RandomString(length)
+	if len(randomString) != length {
+		t.Errorf("Expected %d, got %d", length, len(randomString))
+	}
+}
 func TestTools_UploadFiles(t *testing.T) {
 
 	for _, e := range uploadTests {
@@ -163,4 +162,18 @@ func TestTools_UploadOneFile(t *testing.T) {
 	if e.errorExpected && err == nil {
 		t.Errorf("%s: no error expected but got one", err)
 	}
+}
+func TestTools_CreateDirIfNotExist(t *testing.T) {
+	var testTools Tools
+	err := testTools.CreateDirIfNotExist("./testdata/uploads/")
+	if err != nil {
+		t.Error(err)
+	}
+
+	err = testTools.CreateDirIfNotExist("./testdata/uploads/")
+	if err != nil {
+		t.Error(err)
+	}
+
+	_ = os.Remove("./testdata/uploads")
 }

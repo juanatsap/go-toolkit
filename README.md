@@ -11,7 +11,7 @@ The included tools are:
 - [ ] Download a static file
 - [X] Generate a random string of a specific length
 - [ ] Post JSON to a remote service
-- [ ] Create a directory, including all parent directories, if it does not already exist
+- [X] Create a directory, including all parent directories, if it does not already exist
 - [ ] Create a URL safe slug from a string
 
 ## Version
