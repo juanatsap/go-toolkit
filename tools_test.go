@@ -5,7 +5,9 @@ import (
 	"image"
 	"image/png"
 	"io"
+	"io/ioutil"
 	"mime/multipart"
+	"net/http"
 	"net/http/httptest"
 	"os"
 	"sync"
@@ -205,5 +207,31 @@ func TestTools_Slugify(t *testing.T) {
 		if err == nil && e.errorExpected {
 			t.Errorf("%s didn't return an error", e.name)
 		}
+	}
+}
+func TestTools_DownloadStaticFile(t *testing.T) {
+	rr := httptest.NewRecorder()
+	req, _ := http.NewRequest("GET", "/", nil)
+
+	var testTools Tools
+
+	testTools.DownloadStaticFile(rr, req, "./testdata/", "legion-xiii-logo.png", "legion-xiii-logo-download.png")
+
+	res := rr.Result()
+
+	defer res.Body.Close()
+
+	if res.Header["Content-Length"][0] != "148640" {
+		t.Errorf("Wrong content length, got %s", res.Header["Content-Length"][0])
+	}
+
+	if res.Header["Content-Disposition"][0] != "attachment; filename=\"legion-xiii-logo-download.png\"" {
+		t.Errorf("Wrong content disposition, got %s", res.Header["Content-Disposition"][0])
+	}
+
+	// Check for an error when I try to read from the response body
+	_, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		t.Error(err)
 	}
 }

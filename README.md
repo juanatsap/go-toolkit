@@ -8,7 +8,7 @@ The included tools are:
 - [ ] Write JSON
 - [ ] Produce a JSON encoded error response
 - [X] Upload a file to a specific directory
-- [ ] Download a static file
+- [X] Download a static file
 - [X] Generate a random string of a specific length
 - [ ] Post JSON to a remote service
 - [X] Create a directory, including all parent directories, if it does not already exist

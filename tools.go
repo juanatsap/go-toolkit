@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -186,4 +187,16 @@ func (t *Tools) Slugify(s string) (string, error) {
 		return "", errors.New("after removing characters, slug is zero length")
 	}
 	return slug, nil
+}
+
+// DownloadStaticFile downloads a file, or sends it to the client. It also force the browser to download the file
+// It also allows specification of the file name.
+func (t *Tools) DownloadStaticFile(w http.ResponseWriter, r *http.Request, p, file, displayName string) {
+
+	// We do this to prevent directory traversal attacks and to ensure compatibility between Windows, Linux, and Mac
+	fp := path.Join(p, file)
+
+	// We want to download the file directly to the client, so we need to set the Content-Disposition header
+	w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", displayName))
+	http.ServeFile(w, r, fp)
 }
