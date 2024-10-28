@@ -24,6 +24,18 @@ var uploadTests = []struct {
 	{name: "not allowed rename", allowedTypes: []string{"image/jpeg"}, rename: true, errorExpected: true},
 }
 
+var slugsTests = []struct {
+	name          string
+	s             string
+	expected      string
+	errorExpected bool
+}{
+	{name: "empty string", s: "", expected: "", errorExpected: true},
+	{name: "underscore", s: "_", expected: "", errorExpected: true},
+	{name: "two words", s: "abc def", expected: "abc-def", errorExpected: false},
+	{name: "two words with spaces", s: "abc def ghi", expected: "abc-def-ghi", errorExpected: false},
+}
+
 func TestTools_RandomString(t *testing.T) {
 	var tools Tools
 	const length = 10
@@ -176,4 +188,22 @@ func TestTools_CreateDirIfNotExist(t *testing.T) {
 	}
 
 	_ = os.Remove("./testdata/uploads")
+}
+func TestTools_Slugify(t *testing.T) {
+	var testTools Tools
+	for _, e := range slugsTests {
+		slug, err := testTools.Slugify(e.s)
+
+		if err != nil && !e.errorExpected {
+			t.Errorf("%s failed: %s", e.name, err)
+		}
+
+		if !e.errorExpected && slug != e.expected {
+			t.Errorf("%s: expected %s, got %s", e.name, e.expected, slug)
+		}
+
+		if err == nil && e.errorExpected {
+			t.Errorf("%s didn't return an error", e.name)
+		}
+	}
 }

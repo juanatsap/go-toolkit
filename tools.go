@@ -2,11 +2,13 @@ package toolkit
 
 import (
 	"crypto/rand"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/charmbracelet/log"
@@ -168,4 +170,20 @@ func (t *Tools) CreateDirIfNotExist(path string) error {
 		}
 	}
 	return nil
+}
+
+// Slugify is a function that returns a slug given a string
+func (t *Tools) Slugify(s string) (string, error) {
+
+	if s == "" {
+		return "", errors.New("empty string is not permitted")
+	}
+
+	re := regexp.MustCompile(`[^a-z0-9]+`)
+	slug := strings.Trim(re.ReplaceAllString(strings.ToLower(s), "-"), "-")
+
+	if len(slug) == 0 {
+		return "", errors.New("after removing characters, slug is zero length")
+	}
+	return slug, nil
 }
